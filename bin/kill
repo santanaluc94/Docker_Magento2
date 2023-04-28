@@ -1,0 +1,5 @@
+#!/bin/bash
+docker compose down
+sudo rm -Rf src/
+sudo mkdir src/
+sudo chmod 777 src/

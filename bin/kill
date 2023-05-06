@@ -1,5 +1,4 @@
 #!/bin/bash
-docker compose down
-sudo rm -Rf src/
-sudo mkdir src/
-sudo chmod 777 src/
+bin/cli bin/magento setup:uninstall
+docker compose down -v
+docker compose rm -f

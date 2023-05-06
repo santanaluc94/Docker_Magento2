@@ -1,0 +1,57 @@
+#!/bin/bash
+SetColor='\033[0;32m'
+EndColor='\033[0m'
+echo -e "${SetColor}Runiing composer install.${EndColor}"
+bin/cli composer install
+
+echo -e "${SetColor}Installing Magento 2.${EndColor}"
+bin/cli bin/magento setup:install \
+--base-url=http://localhost/ \
+--backend-frontname=admin \
+--db-host=db \
+--db-name=magento \
+--db-user=admin \
+--db-password=admin123 \
+--admin-firstname=Admin \
+--admin-lastname=Magento \
+--admin-email=admin@admin.com \
+--admin-user=admin \
+--admin-password=admin123 \
+--language=pt_BR \
+--currency=BRL \
+--timezone=America/Sao_Paulo \
+--use-rewrites=1 \
+--amqp-host=rabbitmq \
+--amqp-port=5672 \
+--amqp-user=magento \
+--amqp-password=magento \
+--search-engine=elasticsearch7 \
+--elasticsearch-host=elasticsearch \
+--elasticsearch-port=9200 \
+--cleanup-database
+
+echo -e "${SetColor}Saving basic configs for Magento.${EndColor}"
+bin/cli bin/magento deploy:mode:set developer
+bin/cli bin/magento module:disable {Magento_AdminAdobeImsTwoFactorAuth,Magento_TwoFactorAuth}
+bin/cli bin/magento setup:config:set --backend-frontname="admin"
+bin/cli bin/magento config:set system/security/max_session_size_admin 2560000
+bin/cli bin/magento config:set general/country/default BR
+bin/cli bin/magento config:set general/locale/weight_unit kgs
+bin/cli bin/magento config:set customer/captcha/enable 0
+bin/cli bin/magento config:set customer/captcha/forms NULL
+bin/cli bin/magento config:set customer/create_account/vat_frontend_visibility 1
+bin/cli bin/magento config:set customer/address/street_lines 4
+bin/cli bin/magento config:set customer/address/taxvat_show opt
+bin/cli bin/magento config:set admin/security/session_lifetime 31536000
+bin/cli bin/magento config:set admin/captcha/enable 0
+bin/cli bin/magento config:set admin/captcha/forms NULL
+bin/cli bin/magento config:set dev/debug/template_hints_storefront 1
+bin/cli bin/magento config:set dev/debug/template_hints_storefront_show_with_parameter 1
+bin/cli bin/magento config:set dev/debug/template_hints_parameter_value magento
+bin/cli bin/magento app:config:import
+bin/cli bin/magento setup:upgrade
+bin/cli bin/magento indexer:reindex
+bin/cli bin/magento setup:di:compile
+bin/cli bin/magento setup:static-content:deploy -f
+bin/cli bin/magento cache:clean
+bin/cli bin/magento cache:flush

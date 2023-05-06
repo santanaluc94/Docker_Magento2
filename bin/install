@@ -6,6 +6,6 @@ docker compose up -d
 
 sudo chmod 777 -Rf *
 
-# bin/setup
+bin/setup
 
 sudo chmod 777 -Rf *

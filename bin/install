@@ -4,8 +4,4 @@ EndColor='\033[0m'
 echo -e "${SetColor}Building containers.${EndColor}"
 docker compose up -d
 
-sudo chmod 777 -Rf *
-
 bin/setup
-
-sudo chmod 777 -Rf *

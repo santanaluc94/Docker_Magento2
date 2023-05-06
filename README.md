@@ -15,6 +15,61 @@ Ambiente de Magento 2 em Docker.
 - Elasticsearch: 7.17.10
   - Kibana: 7.17.10
 - Magento Commerce: 2.4.6
+  - n98-magerun: 7.0.3
+
+---
+
+## Scripts
+
+Para **instalar** todo o ambiente é necessário somente um passo:
+
+```sh
+bin/install
+```
+
+Para **parar** os contêiners do projeto:
+
+```sh
+bin/stop
+```
+
+Para **iniciar** os contêiners do projeto:
+
+```sh
+bin/start
+```
+
+Para acessar o terminal do contêiner PHP do projeto:
+
+```sh
+bin/bash
+```
+
+Para executar um comando no terminal do contêiner PHP do projeto:
+
+```sh
+bin/cli
+```
+
+Para **reiniciar** os contêiners do projeto:
+
+```sh
+bin/restart
+```
+
+Para **deletar** o projeto:
+
+```sh
+bin/kill
+```
+
+> Este comando inclui as seguintes funções:
+> - Desinstalar o Magento 2
+> - Deletar os contêiners;
+> - Deletar os volumes do contêiners;
+> - Deletar a rede dos contêiners;
+> - Deletar o arquivo `composer.lock`
+> - Deletar a pasta `vendor`
 
 ---
 

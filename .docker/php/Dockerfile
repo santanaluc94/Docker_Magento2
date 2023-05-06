@@ -11,23 +11,31 @@ RUN apt-get update -y \
     freetds-dev \
     git \
     libc-client-dev \
-    libkrb5-dev \
+    libfreetype6-dev \
     libgmp-dev \
+    libkrb5-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
     libpng-dev \
-    libzip-dev \
+    libsodium-dev \
     libxml2-dev \
     libxslt-dev \
+    libzip-dev \
     make \
     nano \
+    ssh \
     tar \
     unzip \
     vim \
     wget \
+    zlib1g-dev \
     && rm -r /var/lib/apt/lists/*
 
 RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl
 
 RUN apt-get update -y && apt-get upgrade -y
+
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype
 
 RUN docker-php-ext-install -j$(nproc) \
     bcmath \
@@ -56,35 +64,8 @@ RUN docker-php-ext-install -j$(nproc) \
     xsl \
     zip
 
+# Install Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
 # Composer Install
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.2.4
-
-# Install Magento
-RUN composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=2.4.5-p1 .
-RUN composer install
-RUN bin/magento setup:install \
---base-url=http://localhost/ \
---backend-frontname=admin \
---db-host=db \
---db-name=magento \
---db-user=admin \
---db-password=admin123 \
---admin-firstname=admin \
---admin-lastname=admin \
---admin-email=admin@admin.com \
---admin-user=admin \
---admin-password=admin123 \
---language=pt_BR \
---currency=BRL \
---timezone=America/Sao_Paulo \
---use-rewrites=1 \
---amqp-host=rabbitmq \
---amqp-port=5672 \
---amqp-user=magento \
---amqp-password=magento \
---search-engine=elasticsearch7 \
---elasticsearch-host=elasticsearch \
---elasticsearch-port=9200 \
---cleanup-database
-
-EXPOSE 8000
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --version=2.2.21

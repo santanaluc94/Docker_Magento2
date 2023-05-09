@@ -1,7 +1,7 @@
 #!/bin/bash
 SetColor='\033[0;32m'
 EndColor='\033[0m'
-echo -e "${SetColor}Runiing composer install.${EndColor}"
+echo -e "${SetColor}Running composer install.${EndColor}"
 bin/cli composer install
 
 echo -e "${SetColor}Installing Magento 2.${EndColor}"
@@ -30,9 +30,21 @@ bin/cli bin/magento setup:install \
 --elasticsearch-port=9200 \
 --cleanup-database
 
-echo -e "${SetColor}Saving basic configs for Magento.${EndColor}"
+echo -e "${SetColor}Configuring developer mode.${EndColor}"
 bin/cli bin/magento deploy:mode:set developer
+
 bin/cli bin/magento module:disable {Magento_AdminAdobeImsTwoFactorAuth,Magento_TwoFactorAuth}
+
+echo -e "${SetColor}Configuring cache for Redis.${EndColor}"
+bin/cli bin/magento setup:config:set --cache-backend=redis \
+    --cache-backend-redis-server=redis \
+    --cache-backend-redis-port=6379 \
+    --cache-backend-redis-db=0
+bin/cli bin/magento setup:config:set --page-cache=redis \
+    --page-cache-redis-server=redis \
+    --page-cache-redis-db=1
+
+echo -e "${SetColor}Saving basic configs for Magento.${EndColor}"
 bin/cli bin/magento setup:config:set --backend-frontname="admin"
 bin/cli bin/magento config:set system/security/max_session_size_admin 2560000
 bin/cli bin/magento config:set general/country/default BR
@@ -48,6 +60,8 @@ bin/cli bin/magento config:set admin/captcha/forms NULL
 bin/cli bin/magento config:set dev/debug/template_hints_storefront 1
 bin/cli bin/magento config:set dev/debug/template_hints_storefront_show_with_parameter 1
 bin/cli bin/magento config:set dev/debug/template_hints_parameter_value magento
+
+echo -e "${SetColor}Compiling Magento.${EndColor}"
 bin/cli bin/magento app:config:import
 bin/cli bin/magento setup:upgrade
 bin/cli bin/magento indexer:reindex

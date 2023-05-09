@@ -1,6 +1,9 @@
 #!/bin/bash
 SetColor='\033[0;32m'
 EndColor='\033[0m'
+
+cp ./.env_local.example ./.env
+
 echo -e "${SetColor}Building containers.${EndColor}"
 docker compose up -d
 

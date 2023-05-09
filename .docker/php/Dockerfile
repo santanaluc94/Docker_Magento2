@@ -1,4 +1,6 @@
-FROM php:8.1-fpm
+ARG PHP_VERSION
+
+FROM php:${PHP_VERSION}-fpm
 
 # Linux Dependencies
 RUN apt-get update -y \

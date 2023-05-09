@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   db:
-    image: mariadb:10.6
+    image: mariadb:${DB_VERSION}
     container_name: magento_two_mysql
     ports:
       - ${DB_PORT}:3306
@@ -38,7 +38,7 @@ services:
         ipv4_address: ${DB_PHPMYADMIN_IP_ADDRESS}
 
   web:
-    image: nginx:1.22
+    image: nginx:${WEB_VERSION}
     container_name: magento_two_nginx
     volumes:
       - ./src:/var/www/html
@@ -54,7 +54,11 @@ services:
   php:
     image: magento_two_php
     container_name: magento_two_php
-    build: ./.docker/php
+    build:
+      context: ./.docker/php
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: ${PHP_VERSION}
     ports:
       - ${PHP_PORT}:9000
     expose:
@@ -74,27 +78,29 @@ services:
         ipv4_address: ${PHP_IP_ADDRESS}
 
   redis:
-    image: redis:7.0
+    image: redis:${REDIS_VERSION}
     container_name: magento_two_redis
+    ports:
+      - ${REDIS_PORT}:6379
     networks:
       net:
         ipv4_address: ${REDIS_IP_ADDRESS}
 
   rabbitmq:
-    image: rabbitmq:3.9-management
+    image: rabbitmq:${RABBITMQ_VERSION}-management
     container_name: magento_two_rabbitmq
     ports:
-      - ${AMQP_QUEUE_PORT}:5672
-      - ${AMQP_MANAGEMENT_PORT}:15672
+      - ${RABBITMQ_QUEUE_PORT}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT}:15672
     environment:
-      RABBITMQ_DEFAULT_USER: ${AMQP_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${AMQP_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
     networks:
       net:
-        ipv4_address: ${AMQP_IP_ADDRESS}
+        ipv4_address: ${RABBITMQ_IP_ADDRESS}
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.10
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_VERSION}
     container_name: magento_two_elasticsearch
     ports:
       - ${ELASTICSEARCH_PORT}:9200
@@ -112,7 +118,7 @@ services:
         ipv4_address: ${ELASTICSEARCH_IP_ADDRESS}
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.17.10
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
     container_name: magento_two_kibana
     environment:
       ELASTICSEARCH_HOSTS: ${KIBANA_ENVIRONMENT_HOST}

@@ -8,14 +8,14 @@ echo "PHP Unit"
 
 if [[ $1 =~ 'module-'* ]]; then
     if [[ -n "$2" ]]; then
-        ./vendor/bin/phpunit -c ./vendor/e3/$1/phpunit.xml ./vendor/e3/$1/Test/Unit/$2Test.php
+        ./vendor/bin/phpunit -c ./vendor/magezil/$1/phpunit.xml ./vendor/magezil/$1/Test/Unit/$2Test.php
     else
-        ./vendor/bin/phpunit -c ./vendor/e3/$1/phpunit.xml ./vendor/e3/$1/
+        ./vendor/bin/phpunit -c ./vendor/magezil/$1/phpunit.xml ./vendor/magezil/$1/
     fi
 else
     if [[ -n "$2" ]]; then
-        ./vendor/bin/phpunit -c ./app/code/E3/$1/phpunit.xml ./app/code/E3/$1/Test/Unit/$2Test.php
+        ./vendor/bin/phpunit -c ./app/code/Magezil/$1/phpunit.xml ./app/code/Magezil/$1/Test/Unit/$2Test.php
     else
-        ./vendor/bin/phpunit -c ./app/code/E3/$1/phpunit.xml ./app/code/E3/$1/
+        ./vendor/bin/phpunit -c ./app/code/Magezil/$1/phpunit.xml ./app/code/Magezil/$1/
     fi
 fi

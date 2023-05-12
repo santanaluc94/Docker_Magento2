@@ -1,0 +1,20 @@
+#!/bin/bash
+if ! test $1; then
+    echo "Informe o modulo"
+    exit
+fi
+
+# Execute in the first time
+# /vendor/bin/phpcs --config-set installed_paths vendor/php-compatibility/PHPCompatibility
+
+echo "PHP Code Sniffer (PHPCS)"
+
+if [[ $1 =~ 'module-'* ]]; then
+    ./vendor/bin/phpcs ./vendor/magezil/$1/ \
+        --standard=PSR1,PSR12 \
+        --ignore=./test-reports/,./Test/,*.js
+else
+    ./vendor/bin/phpcs ./app/code/Magezil/$1/ \
+        --standard=PSR1,PSR12 \
+        --ignore=./test-reports/,./Test/,*.js
+fi

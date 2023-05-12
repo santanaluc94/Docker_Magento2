@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9003,
             "log": false,
-            "stopOnEntry": true,
+            "stopOnEntry": false,
             "pathMappings": {
                 "/var/www/html": "${workspaceRoot}/src",
             }

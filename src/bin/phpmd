@@ -1,0 +1,13 @@
+#!/bin/bash
+if ! test $1; then
+    echo "Informe o modulo"
+    exit
+fi
+
+echo "PHP Mess Detector (PHPMD)"
+
+if [[ $1 =~ 'module-'* ]]; then
+    ./vendor/bin/phpmd ./vendor/magezil/$1/ text ./vendor/magezil/$1/phpmd-ruleset.xml
+else
+    ./vendor/bin/phpmd ./app/code/Magezil/$1/ text ./app/code/Magezil/$1/phpmd-ruleset.xml
+fi

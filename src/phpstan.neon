@@ -1,0 +1,11 @@
+parameters:
+    level: 5
+    paths:
+        - ./
+    fileExtensions:
+        - php
+        - phtml
+    excludes_analyse:
+        - ./etc/*
+        - ./Test/*
+        - ./test-reports/*

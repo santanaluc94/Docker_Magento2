@@ -1,0 +1,19 @@
+#!/bin/bash
+if ! test $1; then
+    echo "Informe o modulo"
+    exit
+fi
+
+echo "PHP Copy/Paste Detector (PHPCPD)"
+
+if [[ $1 =~ 'module-'* ]]; then
+    ./vendor/bin/phpcpd ./vendor/magezil/$1/ \
+        --exclude=./vendor/magezil/$1/Test/ \
+        --fuzzy \
+        --min-lines=0
+else
+    ./vendor/bin/phpcpd ./app/code/Magezil/$1 \
+        --exclude=./app/code/Magezil/$1/Test \
+        --fuzzy \
+        --min-lines=0
+fi

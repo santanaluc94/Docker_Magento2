@@ -1,0 +1,21 @@
+#!/bin/bash
+if ! test $1; then
+    echo "Informe o modulo"
+    exit
+fi
+
+echo "PHP Unit"
+
+if [[ $1 =~ 'module-'* ]]; then
+    if [[ -n "$2" ]]; then
+        ./vendor/bin/phpunit -c ./vendor/e3/$1/phpunit.xml ./vendor/e3/$1/Test/Unit/$2Test.php
+    else
+        ./vendor/bin/phpunit -c ./vendor/e3/$1/phpunit.xml ./vendor/e3/$1/
+    fi
+else
+    if [[ -n "$2" ]]; then
+        ./vendor/bin/phpunit -c ./app/code/E3/$1/phpunit.xml ./app/code/E3/$1/Test/Unit/$2Test.php
+    else
+        ./vendor/bin/phpunit -c ./app/code/E3/$1/phpunit.xml ./app/code/E3/$1/
+    fi
+fi

@@ -1,0 +1,11 @@
+#!/bin/bash
+if ! test $1; then
+    echo "Informe o modulo"
+    exit
+fi
+
+bin/phpcs $1
+bin/phpmd $1
+bin/phpcpd $1
+bin/phpstan $1
+bin/phpunit $1

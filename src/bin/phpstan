@@ -1,0 +1,13 @@
+#!/bin/bash
+if ! test $1; then
+   echo "Informe o modulo"
+   exit
+fi
+
+echo "PHP Static Analysis (PHPStan)"
+
+if [[ $1 =~ 'module-'* ]]; then
+    ./vendor/bin/phpstan analyse vendor/magezil/$1/ --configuration=phpstan.neon
+else
+    ./vendor/bin/phpstan analyse app/code/Magezil/$1/ --configuration=phpstan.neon
+fi

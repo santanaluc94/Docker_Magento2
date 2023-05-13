@@ -7,7 +7,7 @@ fi
 echo "PHP Static Analysis (PHPStan)"
 
 if [[ $1 =~ 'module-'* ]]; then
-    ./vendor/bin/phpstan analyse vendor/magezil/$1/ --configuration=phpstan.neon
+    ./vendor/bin/phpstan analyse vendor/magezil/$1/ --configuration=vendor/magezil/$1/phpstan.neon
 else
-    ./vendor/bin/phpstan analyse app/code/Magezil/$1/ --configuration=phpstan.neon
+    ./vendor/bin/phpstan analyse app/code/Magezil/$1/ --configuration=app/code/Magezil/$1/phpstan.neon
 fi

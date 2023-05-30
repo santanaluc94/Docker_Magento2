@@ -3,7 +3,13 @@ SuccessColor='\033[0;32m'
 ErrorColor='\033[0;31m'
 EndColor='\033[0m'
 
-cp ./.env_local.example ./.env
+if [ ! -f ./.env ]; then
+    cp ./.env_local.example ./.env
+fi
+
+set -a
+. ./.env
+set +a
 
 echo -e "${SuccessColor}Generating ssh files.${EndColor}"
 openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -sha256 -days 3650 -nodes
@@ -21,14 +27,19 @@ fi
 echo -e "${SuccessColor}Running composer install.${EndColor}"
 bin/cli composer install
 
+if [[ $? -ne 0 ]]; then
+    echo -e "${ErrorColor}Something went wrong running 'composer install' command.${EndColor}"
+    exit
+fi
+
 echo -e "${SuccessColor}Installing Magento 2.${EndColor}"
 bin/cli bin/magento setup:install \
---base-url=https://m2.localhost.com/ \
+--base-url=$MAGENTO_URL \
 --backend-frontname=admin \
 --db-host=db \
---db-name=magento \
---db-user=admin \
---db-password=admin123 \
+--db-name=$DB_NAME \
+--db-user=$DB_USER \
+--db-password=$DB_PASSWORD \
 --admin-firstname=Admin \
 --admin-lastname=Magento \
 --admin-email=admin@admin.com \
@@ -39,12 +50,12 @@ bin/cli bin/magento setup:install \
 --timezone=America/Sao_Paulo \
 --use-rewrites=1 \
 --amqp-host=rabbitmq \
---amqp-port=5672 \
---amqp-user=magento \
---amqp-password=magento \
+--amqp-port=$RABBITMQ_QUEUE_PORT \
+--amqp-user=$RABBITMQ_DEFAULT_USER \
+--amqp-password=$RABBITMQ_DEFAULT_PASS \
 --search-engine=elasticsearch7 \
 --elasticsearch-host=elasticsearch \
---elasticsearch-port=9200 \
+--elasticsearch-port=$ELASTICSEARCH_PORT \
 --cleanup-database
 
 if [[ $? -ne 0 ]]; then
@@ -59,7 +70,7 @@ bin/cli bin/magento module:disable {Magento_AdminAdobeImsTwoFactorAuth,Magento_T
 echo -e "${SuccessColor}Configuring cache for Redis.${EndColor}"
 bin/cli bin/magento setup:config:set --cache-backend=redis \
     --cache-backend-redis-server=redis \
-    --cache-backend-redis-port=6379 \
+    --cache-backend-redis-port=$RABBITMQ_DEFAULT_PASS \
     --cache-backend-redis-db=0
 bin/cli bin/magento setup:config:set --page-cache=redis \
     --page-cache-redis-server=redis \
@@ -89,3 +100,6 @@ bin/cli bin/magento setup:di:compile
 bin/cli bin/magento setup:static-content:deploy -f
 bin/cli bin/magento cache:clean
 bin/cli bin/magento cache:flush
+chmod 777 ./src/var/ -R
+chmod 777 ./src/pub/ -R
+chmod 777 ./src/generated/ -R

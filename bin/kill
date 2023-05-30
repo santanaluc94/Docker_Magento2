@@ -3,5 +3,7 @@ bin/cli bin/magento setup:uninstall
 docker compose down -v
 docker compose rm -f
 rm ./src/composer.lock
+rm ./.docker/nginx/cert.pem
+rm ./.docker/nginx/key.pem
 rm -Rf ./src/vendor/*
 rm ./.env

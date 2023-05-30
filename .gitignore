@@ -1,2 +1,3 @@
 ./.docker/elastic/
 .env
+./.docker/nginx/*.pem
